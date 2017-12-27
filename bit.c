@@ -2,23 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <error.h>
-/**
- * Check if a number is a Power of 2
- * A number is a power of 2 means : 2, 4, 8, 16, 32, 64 etc
- * Then it will have only 1 set bit.
- * 	  32 16 8 4 2 1
- * 2   0  0 0 0 1 0
- * 4   0  0 0 1 0 0
- * 8   0  0 1 0 0 0
- * 16  0  1 0 0 0 0
- * 32  1  0 0 0 0 0
- */
-void power_of_2(int num){
-
-	// Bitwise AND of n and num-1 will be 0.
-	if ((num & (num-1)) == 0)
-		printf("The num:%d is a power of 2.\n", num);
-}
 
 
 /**
@@ -44,17 +27,188 @@ void multiply_by_9(int num){
 
 /**
  * Check if a number is Multiple of 3
- *
  */
 void is_multiple_of_3(int num){
+}
 
+/**
+ * Binary Representation of a Decimal number.
+ */
+void binary_repr(int num) {
+	printf("Binary representation of %d is = \n", num);
+	if (num>1)
+		binary_repr(num/2);
+
+	printf("%d", (num%2));
+}
+
+/**
+ * Check if a number is a Power of 2
+ * A number is a power of 2 means : 2, 4, 8, 16, 32, 64 etc
+ * Then it will have only 1 set bit.
+ * 	  32 16 8 4 2 1
+ * 2   0  0 0 0 1 0
+ * 4   0  0 0 1 0 0
+ * 8   0  0 1 0 0 0
+ * 16  0  1 0 0 0 0
+ * 32  1  0 0 0 0 0
+ */
+int power_of_2(int num){
+	int ret = 0;
+	// Bitwise AND of n and num-1 will be 0.
+	if ((num & (num-1)) == 0) {
+		ret = 1;
+		printf("The num=%d is a power of 2.\n", num);
+	}
+
+	printf("\nThe num=%d is not a power of 2.\n", num);
+	return ret;
+}
+
+/**
+ * Find the position of the only SET bit.
+ */
+int find_position_of_only_set_bit(int num) {
+	unsigned int i, pos = 1;
+
+	if (!power_of_2(num)) {
+		printf("This number has more than 1 SET bit.\n");
+		return -1;
+	}
+
+	while(!(i&num)) {
+		i = i<<1;
+		++pos;
+	}
+	printf("The position of the ONLY SET bit in %d is %d", num, pos);
+	return pos;
+}
+
+/**
+ * Count the number of Set Bits
+ */
+int count_set_bits(int num) {
+	// Method 1
+	unsigned int i = 1, count = 0;
+	int cached_num = num;
+
+	while(num){
+		if (i&num){
+			count++;
+		}
+		num = num>>1;
+	}
+
+	printf("\nNumber of Set Bits in %d are %d\n", cached_num, count);
+
+
+	// Method 2
+	/* When we subtract 1 from a number then if
+	 * - LSB of the num is 1 then its toggled and then done you have num-1
+	 * - LSB of the num is 0 then all the bits are toggled till the 1st SET_BIT(1)
+	 * 		of the number and done you have a num-1.
+	 *
+	 * 	So when you do (num & (num-1)) if clears the Right Most set Bit.
+	 */
+	count = 0;
+	num = cached_num;
+	while (num != 0){
+		printf("\nNum = %d", num);
+		num = (num & (num-1));
+		count++;
+	}
+	printf("\nNumber of Set Bits in %d are %d\n", cached_num, count);
+	return count;
+}
+
+/**
+ * rotate_num - Rotate "d" bits of a Number
+ * 0010 1101 1001 0111 ---> 1001 0111 0010 1101
+ * Bit Rotation is similar to the shift operation except that in rotation
+ * the bits that fall off at one end are put back together at the other end.
+ * @IP: num = number , d = number of bits to be rotated
+ * @OP: Rotated number
+ */
+int rotate_num(int num, unsigned int d) {
+	printf("\nRotating num=%d by %d bits\n", num, d);
+	int rotated_num, cached_num, length;
+
+	//length = (8 * (sizeof(int)));
+	length = 4;
+
+	printf("Length of the number= %d %d ", length, length-d);
+	num = num<<d;
+	cached_num = num>>(length-d);
+
+	rotated_num = num|cached_num;
+
+	return rotated_num;
+}
+
+int reverse_num(int num){
+	return num;
+}
+
+/**
+ * add_1 - Adds 1 to a number
+ *
+ * Check the LSB first
+ * if LSB == 0, then Flip it and then done -- > you have n+1
+ * if LSB == 1,
+ * Then Flip all the bits after the rightmost 0th bit
+ * also flip this 0th bit too.
+ *
+ * XOR is your friend here.
+ */
+int add_1(int num) {
+	int k = 1;
+
+	while (num & k) {
+		//printf("\nnum = %d , %d , %d, %d", num, k,  (num & k), (num ^ k));
+		num = num ^ k;
+		k = k <<1;
+	}
+
+	num = num ^ k;
+	return num;
+}
+
+/*
+ * Detect opposite signs
+ * Concept of Sign Bit
+ * XOR truth Table
+ */
+int detect_opposite_signs(int x, int y) {
+	if ((x^y) < 0)
+		return 1;
+
+	return 0;
 }
 
 
-int main() {
 
-	power_of_2(8);
+int main() {
+	int num;
+	power_of_2(9);
 	multiply_by_7(9);
 	multiply_by_9(9);
+	num = 18;
+	printf("Binary representation of %d is = \n", num);
+	binary_repr(num);
+
+	num = find_position_of_only_set_bit(16);
+	num = count_set_bits(17);
+
+	num = add_1(19);
+	binary_repr(19);
+	printf("\nAdds 1 equals = %d ", num);
+	binary_repr(num);
+	num = detect_opposite_signs(23, 5);
+	printf("\n%d", num);
+
+	num = rotate_num(8, 2);
+	printf("\nrotated %d", num);
+	binary_repr(num);
+
 	return 0;
 }
