@@ -1,7 +1,7 @@
 /* insert_m_in_n.c * Created on: Apr 16, 2018 *      Author: hsahu */
 #include <stdlib.h>
 #include <stdio.h>
-#include <error.h>
+//#include <error.h>
 #include <math.h>
 #include "bit.h"
 

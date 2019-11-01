@@ -6,13 +6,15 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include <error.h>
+//#include <error.h>
 #include <math.h>
 #include "bit.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
-/** CTCI
+
+/**
+ * CTCI
  * Flip a bit from 0 to 1 to get the max continuous sequence of 1s
  */
 int flip_bit(unsigned int a){
